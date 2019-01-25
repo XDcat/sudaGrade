@@ -1,10 +1,10 @@
 # -*- coding:utf-8 -*-
-'''
+"""
 __author__ = 'XD'
 __mtime__ = 2019/1/13
 __project__ = 教学评估解析
 Fix the Problem, Not the Blame.
-'''
+"""
 import hashlib
 import sqlite3
 import traceback
@@ -19,17 +19,18 @@ from operator import itemgetter  # itemgetter用来去dict中的key，省去了�
 from itertools import groupby  # itertool还包含有其他很多函数，比如将多个list联合起来
 from log.logger import Logger
 from db import db
+
 logger = Logger().logger
 
 
 class Stu:
-    '''
+    """
     主要的属性：
     num: 学号
     name: 姓名
     grade: 成绩的字典
     GPA: 总G点
-    '''
+    """
 
     def __init__(self, num, password=None):
         # 初始化值
@@ -39,11 +40,13 @@ class Stu:
         self.isInDB = db.has_num(num)
         if self.isInDB:
             if self.isInDB['isLogable'] != 1:
+                logger.info('[%s]在数据库中：无信息。', num)
                 pass
             else:
                 self.name = self.isInDB['name']
                 self.grade = json.loads(self.isInDB['grade'])
                 self.GPA = self.isInDB['GPA']
+                logger.info('[%s]在数据库中：%s-%s', num, self.name, self.GPA)
         else:
             login = self.__get_login(num, password)  # 获取登陆信息
             # 判断是否可以爬取
@@ -54,18 +57,20 @@ class Stu:
                 self.grade = self.__get_grade(num, self.__token)
                 self.GPA = self.get_GPA()['0000']
                 db.insert(self.num, 1, self.__token, self.name, self.grade, self.GPA)
+                logger.info('[%s]不在在数据库中，正常爬取：%s-%s', num, self.name, self.GPA)
             else:
                 self.__token = self.name = self.grade = None
                 db.insert(self.num, 0, '', '', '', '')
+                logger.info('[%s]不在在数据库中，无法爬取：%s-%s', num, self.name, self.GPA)
 
     @staticmethod
     def __get_login(student_num, password, proxy={'https': 'https://119.101.114.103'}):
-        '''
+        """
         获取动态的token
         :param student_num: 学号
         :param proxy: 单个代理
         :return: 如果成功登陆返回登陆信息字典；否则密码错误，返回None；
-        '''
+        """
         # mod5加密, 传入头
         if password:
             p_text = hashlib.md5(password.encode('utf-8')).hexdigest()
@@ -83,7 +88,7 @@ class Stu:
         # url
         url = 'http://42.244.42.160/university-facade/Murp/Login'
         # 请求
-        response = requests.post(url, data=json.dumps(data), headers=header, proxies=proxy, timeout=6)
+        response = StuTools.requests_post(url, data=json.dumps(data), headers=header, proxies=proxy, timeout=6)
         res = json.loads(response.text)
         if res['state'] == 2002:
             return None
@@ -92,21 +97,21 @@ class Stu:
 
     @staticmethod
     def __get_grade(num, token, proxy={'https': 'https://119.101.114.103'}):
-        '''
+        """
         获取成绩信息
         :param token: token参数
         :return:
-        '''
+        """
         header = {'Content-Type': 'application/json; charset=utf-8',
                   'User-Agent': 'okhttp/3.3.1'
                   }
         url = 'http://42.244.42.160//university-facade/MyUniversity/MyGrades?token={}'.format(token)
-        response = requests.get(url, headers=header, proxies=proxy)
+        response = StuTools.requests_get(url, headers=header, proxies=proxy)
         res = json.loads(response.text)
         # 如果未完成教学评价，帮助其完成
         if res['state'] == 4001:
             Stu.__jxpg(num, token)
-            response = requests.get(url, headers=header, proxies=proxy)
+            response = StuTools.requests_get(url, headers=header, proxies=proxy)
             res = json.loads(response.text)
         # 获取具体的成绩列表
         res = res['data']  # 得到按学期分的列表
@@ -119,11 +124,11 @@ class Stu:
 
     @staticmethod
     def __g(point):
-        '''
+        """
         获取分数对于的G点
         :param point: 分数
         :return: G点
-        '''
+        """
         point = int(point)
         gpadb = {100: 4.0, 79: 3.2,
                  99: 4.0, 78: 3.1,
@@ -152,26 +157,26 @@ class Stu:
             return gpadb[point]
 
     def __get_token(self, student_num, password, proxy={'https': 'https://119.101.114.103'}):
-        '''
+        """
         当login失效时，或者想单独获取token信息，用来登陆。
         :param student_num: 学号
         :param proxy: 单个代理
         :return: token信息
-        '''
+        """
         login_content = self.__get_login(student_num, password, proxy)
         token_text = login_content['data']['token']
         return token_text
 
     @staticmethod
     def __jxpg(num, token, proxy={'https': 'https://119.101.114.103'}):
-        '''完成教学评估'''
+        """完成教学评估"""
         header = {'Content-Type': 'application/json; charset=utf-8',
                   'User-Agent': 'okhttp/3.3.1'
                   }
         # 获取待评测列表
         url = 'http://42.244.42.160/university-facade/TeachingEvaluation/queryWaitList.shtml?token={}&pageIndex=0&pageSize=10000'.format(
             token)
-        response = requests.get(url, headers=header, proxies=proxy)
+        response = StuTools.requests_get(url, headers=header, proxies=proxy)
         classes = json.loads(response.text)['data']['rows']
         classes = [i['id'] for i in classes]  # 得到带评测课程的id
         # 评测
@@ -179,7 +184,7 @@ class Stu:
             # 获取评测界面
             url = 'http://42.244.42.160/university-facade//TeachingEvaluation/queryPaperForWait.shtml?id={}&token={}'.format(
                 aclass, token)
-            response = requests.get(url, headers=header, proxies=proxy)
+            response = StuTools.requests_get(url, headers=header, proxies=proxy)
             ques = re.findall('"id":"(.*?)"', response.text)  # 问题的id
             ques = ['subjectId:{},type:0,optionSn:1'.format(i) for i in ques]
             # 回答问题
@@ -200,10 +205,10 @@ class Stu:
                 raise Exception('出错:'.format(response))
 
     def get_GPA(self):
-        '''
+        """
         获取GPA，所有的，每个学期的。
         :return: GPA的字典
-        '''
+        """
 
         def get_G(grade):
             effectiv_grade = list(filter(lambda x: x['cj'].isdigit(), grade))  # 去除所有等级
@@ -232,12 +237,12 @@ class StuTools:
 
     @staticmethod
     def get_major_stu_num(grade):
-        '''
+        """
         查找各个专业对应的学号, 即学号的前缀
         e.g. 1709404001 => 1709404
         :param grade: 年纪
         :return:None
-        '''
+        """
         academy = db.select_all('academy')
         for aAcademy in academy:
             # 遍历每一个学号
@@ -252,8 +257,32 @@ class StuTools:
                         for l in range(4):
                             pass
 
+    @staticmethod
+    def requests_post(url, data, headers, proxies, timeout=6):
+        """单独封装的post，可以重试10次"""
+        tries = 10
+        while tries > 0:
+            try:
+                res = requests.post(url, data=data, headers=headers, proxies=proxies, timeout=timeout)
+                return res
+            except:
+                tries -= 1
+                logger.error('POST失败, 即将重试第%s次。', 10 - tries, exc_info=True)
+
+    @staticmethod
+    def requests_get(url, headers, proxies, timeout=6):
+        """单独封装的get，可以重试10次"""
+        tries = 10
+        while tries > 0:
+            try:
+                res = requests.get(url, headers=headers, proxies=proxies, timeout=timeout)
+                return res
+            except:
+                tries -= 1
+                logger.error('GET失败, 即将重试第%s次。', 10 - tries, exc_info=True)
+
 # print(db.has_num('1898798'))
-# a = Stu('1709404010', 'Zlj1784470039')
+a = Stu('1709404010', 'Zlj1784470039')
 # pprint.pprint(a.grade)
 # print(a.get_GPA())
 # for i in range(1, 144):
@@ -263,5 +292,5 @@ class StuTools:
 #     except:
 #         logger(i)
 #         traceback.print_exc()
-logger.info('alsdkfj')
+
 # 数据从14级开始
