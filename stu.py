@@ -17,6 +17,9 @@ import re
 import random
 from operator import itemgetter  # itemgetter用来去dict中的key，省去了使用lambda函数
 from itertools import groupby  # itertool还包含有其他很多函数，比如将多个list联合起来
+from log.logger import Logger
+
+logger = Logger().logger
 
 
 class Stu:
@@ -199,14 +202,7 @@ class Stu:
     def get_GPA(self):
         '''
         获取GPA，所有的，每个学期的。
-        :return:
-                {'all': ~,
-                'xq': {
-                        '1801':~,
-                        '1802':~,
-                        ...
-                    }
-                }
+        :return: GPA的字典
         '''
 
         def get_G(grade):
@@ -304,12 +300,12 @@ class StuTools:
 # a = Stu('1709404010', 'Zlj1784470039')
 # pprint.pprint(a.grade)
 # print(a.get_GPA())
-for i in range(1, 144):
-    try:
-        a = Stu('1809404{:03}'.format(i))
-        print('1709404{:03}'.format(i))
-    except:
-        print(i)
-        traceback.print_exc()
-
+# for i in range(1, 144):
+#     try:
+#         a = Stu('1809404{:03}'.format(i))
+#         logger('1709404{:03}'.format(i))
+#     except:
+#         logger(i)
+#         traceback.print_exc()
+logger.info('alsdkfj')
 # 数据从14级开始
