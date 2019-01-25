@@ -12,6 +12,7 @@ import yaml
 
 
 class Logger:
+    '''根据配置文件生成logger'''
     def __init__(self, default_path='log/conf.yaml', default_level=logging.INFO):
         path = default_path
         if os.path.exists(path):

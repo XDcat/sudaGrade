@@ -18,7 +18,7 @@ import random
 from operator import itemgetter  # itemgetter用来去dict中的key，省去了使用lambda函数
 from itertools import groupby  # itertool还包含有其他很多函数，比如将多个list联合起来
 from log.logger import Logger
-
+from db import db
 logger = Logger().logger
 
 
@@ -36,7 +36,7 @@ class Stu:
         self.num = num  # 学号
         self.name = self.grade = self.GPA = None
         # 选择从数据库查询还是在线查询
-        self.isInDB = StuTools.db_has_num(num)
+        self.isInDB = db.has_num(num)
         if self.isInDB:
             if self.isInDB['isLogable'] != 1:
                 pass
@@ -53,10 +53,10 @@ class Stu:
                 self.name = login['data']['name']  # name
                 self.grade = self.__get_grade(num, self.__token)
                 self.GPA = self.get_GPA()['0000']
-                StuTools.db_insert(self.num, 1, self.__token, self.name, self.grade, self.GPA)
+                db.insert(self.num, 1, self.__token, self.name, self.grade, self.GPA)
             else:
                 self.__token = self.name = self.grade = None
-                StuTools.db_insert(self.num, 0, '', '', '', '')
+                db.insert(self.num, 0, '', '', '', '')
 
     @staticmethod
     def __get_login(student_num, password, proxy={'https': 'https://119.101.114.103'}):
@@ -238,7 +238,7 @@ class StuTools:
         :param grade: 年纪
         :return:None
         '''
-        academy = StuTools.db_select_all('academy')
+        academy = db.select_all('academy')
         for aAcademy in academy:
             # 遍历每一个学号
             # 学号 = 年级 + 学院 + 专业 + 编号
@@ -252,51 +252,7 @@ class StuTools:
                         for l in range(4):
                             pass
 
-    @staticmethod
-    def db_dict_factory(cursor, row):
-        '''Cursor的工厂方法：返回字典'''
-        d = {}
-        for idx, col in enumerate(cursor.description):
-            d[col[0]] = row[idx]
-        return d
-
-    @staticmethod
-    def db_select_all(table):
-        '''获取表中所有数据'''
-        con = sqlite3.connect('db/sudaStu.db')
-        con.row_factory = StuTools.db_dict_factory  # 指定工厂方法
-        res = con.execute('SELECT * FROM ?', (table,)).fetchall()
-        con.close()
-        return res
-
-    @staticmethod
-    def db_has_num(num):
-        '''数据库中是否存在num学号'''
-        con = sqlite3.connect('db/sudaStu.db')
-        con.row_factory = StuTools.db_dict_factory  # 指定工厂方法
-        res = con.execute('SELECT * FROM stu WHERE stuNum = ?', (num,)).fetchone()
-        con.close()
-        return res
-
-    @staticmethod
-    def db_insert(num, isLogable, token, name, grade, GPA):
-        '''
-        保存数据
-        :param num: 学号
-        :param isLogable: 是否可登陆
-        :param token: ~
-        :param name: 姓名
-        :param grade: 成绩
-        :return: None
-        '''
-        con = sqlite3.connect('db/sudaStu.db')
-        con.execute('INSERT INTO stu (stuNum, isLogable, token, name, grade, GPA) VALUES (?, ?, ?, ?, ?, ?)',
-                    (num, isLogable, token, name, json.dumps(grade), str(GPA)))
-        con.commit()
-        con.close()
-
-
-# print(StuTools.db_has_num('1898798'))
+# print(db.has_num('1898798'))
 # a = Stu('1709404010', 'Zlj1784470039')
 # pprint.pprint(a.grade)
 # print(a.get_GPA())
