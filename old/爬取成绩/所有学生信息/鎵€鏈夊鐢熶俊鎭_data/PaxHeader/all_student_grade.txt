@@ -1,3 +1,0 @@
-54 path=所有学生信息/data/all_student_grade.txt
-27 mtime=1532842987.355822
-27 atime=1532842987.795824
