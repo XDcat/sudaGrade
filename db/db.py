@@ -34,6 +34,13 @@ def has_num(num):
     con.close()
     return res
 
+def has_major(num):
+    """数据库中是否存在num学号"""
+    con = sqlite3.connect('db/sudaStu.db')
+    con.row_factory = dict_factory  # 指定工厂方法
+    res = con.execute('SELECT * FROM major WHERE num = ?', (num,)).fetchone()
+    con.close()
+    return res
 
 def insert_stu(num, isLogable, token, name, score, GPA, info):
     """

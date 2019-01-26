@@ -16,7 +16,7 @@ import pprint
 import re
 import random
 from operator import itemgetter  # itemgetter用来去dict中的key，省去了使用lambda函数
-from itertools import groupby  # itertool还包含有其他很多函数，比如将多个list联合起来
+from itertools import groupby  # i    tertool还包含有其他很多函数，比如将多个list联合起来
 from log.logger import Logger
 from db import db
 
@@ -278,8 +278,11 @@ class StuTools:
                             astu = Stu(num)
                             if astu.name:
                                 # 如果成功获取保存数据
-                                db.insert_major(num[:-3], grade, astu.info['学院'], astu.info['专业'])
-                                logger.info('成功找到专业: %s', num)
+                                if db.has_major(num[:-3]):
+                                    pass
+                                else:
+                                    db.insert_major(num[:-3], grade, astu.info['学院'], astu.info['专业'])
+                                    logger.info('成功找到专业: %s', num)
                                 break
                             else:
                                 logger.info('无法找到专业: %s', num)
@@ -287,26 +290,26 @@ class StuTools:
     @staticmethod
     def requests_post(url, data, headers, timeout=3):
         """单独封装的post，可以重试10次"""
-        tries = 10
-        while tries > 0:
+        count = 0
+        while True:
             try:
                 res = requests.post(url, data=data, headers=headers, proxies=StuTools.get_proxy(), timeout=timeout)
                 return res
             except:
-                tries -= 1
-                logger.error('POST失败, 即将重试第%s次。', 10 - tries, exc_info=True)
+                count += 1
+                logger.error('POST失败, 即将重试第%s次。', count, exc_info=True)
 
     @staticmethod
     def requests_get(url, headers, timeout=3):
         """单独封装的get，可以重试10次"""
-        tries = 10
-        while tries > 0:
+        count = 0
+        while True:
             try:
                 res = requests.get(url, headers=headers, proxies=StuTools.get_proxy(), timeout=timeout)
                 return res
             except:
-                tries -= 1
-                logger.error('GET失败, 即将重试第%s次。', 10 - tries, exc_info=True)
+                count += 1
+                logger.error('GET失败, 即将重试第%s次。', count, exc_info=True)
 
     @staticmethod
     def get_proxy():
@@ -411,6 +414,7 @@ class StuTools:
                    {'https': 'http://27.156.119.246:9999'},
                    {'http': 'http://121.61.2.69:9999'}]
         return random.choice(proxies)
+
 
 # print(db.has_num('1898798'))
 # a = Stu('1709404010', 'Zlj1784470039')
