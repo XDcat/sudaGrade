@@ -7,6 +7,7 @@ Fix the Problem, Not the Blame.
 """
 import hashlib
 import sqlite3
+import sys
 import traceback
 from functools import reduce
 
@@ -16,7 +17,7 @@ import pprint
 import re
 import random
 from operator import itemgetter  # itemgetter用来去dict中的key，省去了使用lambda函数
-from itertools import groupby  # i    tertool还包含有其他很多函数，比如将多个list联合起来
+from itertools import groupby  # itertool还包含有其他很多函数，比如将多个list联合起来
 from log.logger import Logger
 from db import db
 
@@ -278,11 +279,8 @@ class StuTools:
                             astu = Stu(num)
                             if astu.name:
                                 # 如果成功获取保存数据
-                                if db.has_major(num[:-3]):
-                                    pass
-                                else:
-                                    db.insert_major(num[:-3], grade, astu.info['学院'], astu.info['专业'])
-                                    logger.info('成功找到专业: %s', num)
+                                db.insert_major(num[:-3], grade, astu.info['学院'], astu.info['专业'])
+                                logger.info('成功找到专业: %s', num)
                                 break
                             else:
                                 logger.info('无法找到专业: %s', num)
@@ -430,5 +428,6 @@ class StuTools:
 
 # 数据从14级开始
 if __name__ == '__main__':
-    StuTools.get_major_stu_num(17)
+    input_argv = sys.argv
+    StuTools.get_major_stu_num(input_argv[1])
     # a = Stu('1609404010')
