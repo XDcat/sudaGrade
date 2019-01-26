@@ -1,0 +1,56 @@
+2019-01-25 11:28:17,066 - main.core - INFO - First Try
+2019-01-25 11:30:10,132 - main.core - INFO - First Try
+2019-01-25 11:30:10,132 - main.core - INFO - Second Try
+2019-01-25 11:30:51,313 - main.core - INFO - First Try
+2019-01-25 11:31:03,048 - main.core - INFO - Second Try
+2019-01-25 12:08:35,538 - main.core - INFO - First Try
+2019-01-25 12:08:35,539 - main.core - INFO - Second Try
+2019-01-25 12:08:57,899 - main.core - INFO - First Try
+2019-01-25 12:08:57,900 - main.core - INFO - Second Try
+2019-01-25 12:09:03,463 - main.core - INFO - First Try
+2019-01-25 12:09:03,463 - main.core - INFO - Second Try
+2019-01-25 12:14:20,629 - main.core - INFO - First Try
+2019-01-25 12:14:20,630 - main.core - INFO - Second Try
+2019-01-25 12:15:03,416 - main.core - INFO - First Try
+2019-01-25 12:15:09,122 - main.core - INFO - First Try
+2019-01-25 12:15:09,122 - main.core - INFO - Second Try
+2019-01-25 12:15:12,478 - main.core - INFO - First Try
+2019-01-25 12:15:12,478 - main.core - INFO - Second Try
+2019-01-25 12:15:14,975 - main.core - INFO - First Try
+2019-01-25 12:15:14,975 - main.core - INFO - Second Try
+2019-01-25 12:15:28,830 - main.core - INFO - First Try
+2019-01-25 12:15:28,830 - main.core - INFO - Second Try
+2019-01-25 12:15:31,302 - main.core - INFO - First Try
+2019-01-25 12:15:31,302 - main.core - INFO - Second Try
+2019-01-25 12:15:49,862 - main.core - INFO - First Try
+2019-01-25 12:15:49,863 - main.core - INFO - Second Try
+@@
+@@
+@@
+@@
+@@
+@@
+@@
+2019-01-25 12:36:42,603 - root - DEBUG - @@
+2019-01-25 12:37:03,702 - root - DEBUG - @@
+2019-01-25 12:37:40,059 - root - DEBUG - @@
+2019-01-25 12:38:45,545 - root - DEBUG - @@
+2019-01-25 12:39:10,753 - root - DEBUG - @@
+2019-01-25 12:39:10,754 - root - INFO - @@
+2019-01-25 12:39:48,909 - root - DEBUG - @@
+2019-01-25 12:39:48,909 - root - INFO - @@
+2019-01-25 12:45:16,488 - mylogger - INFO - foorbar
+2019-01-25 12:46:40,716 - mylogger - INFO - foorbar
+2019-01-25 12:46:40,716 - mylogger - DEBUG - hello
+2019-01-25 12:48:52,499 - main.core - INFO - First Try
+2019-01-25 12:48:52,500 - main.core - INFO - Second Try
+2019-01-25 12:51:27,853 - main.core - INFO - First Try
+2019-01-25 12:51:27,853 - main.core - INFO - Second Try
+2019-01-25 12:51:43,084 - main.core - INFO - First Try
+2019-01-25 12:51:43,084 - main.core - INFO - Second Try
+2019-01-25 12:51:43,773 - main.core - INFO - First Try
+2019-01-25 12:51:43,773 - main.core - INFO - Second Try
+2019-01-25 12:51:49,048 - main.core - INFO - First Try
+2019-01-25 12:51:49,048 - main.core - INFO - Second Try
+2019-01-25 12:52:19,166 - main.core - INFO - First Try
+2019-01-25 12:52:19,166 - main.core - INFO - Second Try
