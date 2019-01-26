@@ -1,1 +1,22 @@
 # Created by .ignore support plugin (hsz.mobi)
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+out
+gen
+test
+old
+study
+weixinpost.py
+.idea/dataSources.local.xml
+.idea/inspectionProfiles/
+.idea/workspace.xml
+db/__pycache__/__init__.cpython-37.pyc
+db/__pycache__/db.cpython-37.pyc
+log/__pycache__/__init__.cpython-37.pyc
+log/__pycache__/logger.cpython-37.pyc
+"old/\347\210\254\345\217\226\346\210\220\347\273\251/tasks/"
+"old/\347\210\254\345\217\226\346\210\220\347\273\251/\346\211\200\346\234\211\345\255\246\347\224\237\344\277\241\346\201\257/\351\216\265\342\202\254\351\217\210\345\244\212\356\204\237\351\220\242\347\206\266\344\277\212\351\216\255_/"
