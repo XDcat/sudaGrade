@@ -287,26 +287,26 @@ class StuTools:
     @staticmethod
     def requests_post(url, data, headers, timeout=3):
         """单独封装的post，可以重试10次"""
-        tries = 10
-        while tries > 0:
+        count = 0
+        while True:
             try:
                 res = requests.post(url, data=data, headers=headers, proxies=StuTools.get_proxy(), timeout=timeout)
                 return res
             except:
-                tries -= 1
-                logger.error('POST失败, 即将重试第%s次。', 10 - tries, exc_info=True)
+               	count += 1
+                logger.error('POST失败, 即将重试第%s次。', count, exc_info=True)
 
     @staticmethod
     def requests_get(url, headers, timeout=3):
         """单独封装的get，可以重试10次"""
-        tries = 10
-        while tries > 0:
+        count = 0
+        while True:
             try:
                 res = requests.get(url, headers=headers, proxies=StuTools.get_proxy(), timeout=timeout)
                 return res
             except:
-                tries -= 1
-                logger.error('GET失败, 即将重试第%s次。', 10 - tries, exc_info=True)
+                count += 1
+                logger.error('GET失败, 即将重试第%s次。', count, exc_info=True)
 
     @staticmethod
     def get_proxy():
@@ -426,5 +426,5 @@ class StuTools:
 
 # 数据从14级开始
 if __name__ == '__main__':
-    StuTools.get_major_stu_num(17)
+    StuTools.get_major_stu_num(18)
     # a = Stu('1609404010')
